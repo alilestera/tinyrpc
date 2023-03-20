@@ -28,6 +28,3 @@ gen
 
 # Go workspace file
 go.work
-
-# obsidian folder
-.obsidian
