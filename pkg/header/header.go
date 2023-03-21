@@ -14,7 +14,7 @@ const (
 	Uint32Size = 4
 )
 
-var UnmarshalError = errors.New("an error occurred in Unmarshal")
+var ErrUnmarshal = errors.New("an error occurred in Unmarshal")
 
 // CompressType type of compressions supported by rpc
 type CompressType uint16
@@ -57,12 +57,12 @@ func (r *RequestHeader) Unmarshal(data []byte) (err error) {
 	r.Lock()
 	defer r.Unlock()
 	if len(data) == 0 {
-		return UnmarshalError
+		return ErrUnmarshal
 	}
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = UnmarshalError
+			err = ErrUnmarshal
 		}
 	}()
 	idx, size := 0, 0
@@ -134,12 +134,12 @@ func (r *ResponseHeader) Unmarshal(data []byte) (err error) {
 	r.Lock()
 	defer r.Unlock()
 	if len(data) == 0 {
-		return UnmarshalError
+		return ErrUnmarshal
 	}
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = UnmarshalError
+			err = ErrUnmarshal
 		}
 	}()
 	idx, size := 0, 0
