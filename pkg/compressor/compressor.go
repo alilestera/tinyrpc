@@ -10,6 +10,14 @@ const (
 	Zlib
 )
 
+// Compressors which supported by rpc
+var Compressors = map[CompressType]Compressor{
+	Raw:    RawCompressor{},
+	Gzip:   GzipCompressor{},
+	Snappy: SnappyCompressor{},
+	Zlib:   ZlibCompressor{},
+}
+
 // Compressor is interface, each compressor has Zip and Unzip functions
 type Compressor interface {
 	Zip([]byte) ([]byte, error)

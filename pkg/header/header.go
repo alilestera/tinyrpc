@@ -3,6 +3,7 @@ package header
 import (
 	"encoding/binary"
 	"errors"
+	"github.com/alilestera/tinyrpc/pkg/compressor"
 	"sync"
 )
 
@@ -16,9 +17,6 @@ const (
 
 var ErrUnmarshal = errors.New("an error occurred in Unmarshal")
 
-// CompressType type of compressions supported by rpc
-type CompressType uint16
-
 // RequestHeader request header structure looks like:
 // +--------------+----------------+----------+------------+----------+
 // | CompressType |      Method    |    ID    | RequestLen | Checksum |
@@ -27,7 +25,7 @@ type CompressType uint16
 // +--------------+----------------+----------+------------+----------+
 type RequestHeader struct {
 	sync.RWMutex
-	CompressType CompressType
+	CompressType compressor.CompressType
 	Method       string
 	ID           uint64
 	RequestLen   uint32
@@ -66,7 +64,7 @@ func (r *RequestHeader) Unmarshal(data []byte) (err error) {
 		}
 	}()
 	idx, size := 0, 0
-	r.CompressType = CompressType(binary.LittleEndian.Uint16(data[idx:]))
+	r.CompressType = compressor.CompressType(binary.LittleEndian.Uint16(data[idx:]))
 	idx += Uint16Size
 
 	r.Method, size = readString(data[idx:])
@@ -103,7 +101,7 @@ func (r *RequestHeader) ResetHeader() {
 // +--------------+---------+----------------+-------------+----------+
 type ResponseHeader struct {
 	sync.RWMutex
-	CompressType CompressType
+	CompressType compressor.CompressType
 	ID           uint64
 	Error        string
 	ResponseLen  uint32
@@ -143,7 +141,7 @@ func (r *ResponseHeader) Unmarshal(data []byte) (err error) {
 		}
 	}()
 	idx, size := 0, 0
-	r.CompressType = CompressType(binary.LittleEndian.Uint16(data[idx:]))
+	r.CompressType = compressor.CompressType(binary.LittleEndian.Uint16(data[idx:]))
 	idx += Uint16Size
 
 	r.ID, size = binary.Uvarint(data[idx:])
