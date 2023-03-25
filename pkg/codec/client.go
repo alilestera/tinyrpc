@@ -46,7 +46,7 @@ func (c *clientCodec) WriteRequest(r *rpc.Request, param any) error {
 	return c.buildSendRequest(r, compressedReqBody)
 }
 
-// buildSendRequest Build request and send frame
+// buildSendRequest build request and send frame
 // reqBody is compressed
 func (c *clientCodec) buildSendRequest(r *rpc.Request, reqBody []byte) error {
 	// get header from pool
@@ -110,7 +110,7 @@ func (c *clientCodec) ReadResponseBody(param any) error {
 		}
 		return nil
 	}
-	// read ResponseLen length
+	// read ResponseLen length bytes
 	respBody := make([]byte, c.response.ResponseLen)
 	err := read(c.r, respBody)
 	if err != nil {
