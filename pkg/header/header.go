@@ -82,6 +82,13 @@ func (r *RequestHeader) Unmarshal(data []byte) (err error) {
 	return
 }
 
+// GetCompressType get compress type
+func (r *RequestHeader) GetCompressType() compressor.CompressType {
+	r.RLock()
+	defer r.RUnlock()
+	return r.CompressType
+}
+
 // ResetHeader reset request header
 func (r *RequestHeader) ResetHeader() {
 	r.Lock()
@@ -156,6 +163,13 @@ func (r *ResponseHeader) Unmarshal(data []byte) (err error) {
 
 	r.Checksum = binary.LittleEndian.Uint32(data[idx:])
 	return
+}
+
+// GetCompressType get compress type
+func (r *ResponseHeader) GetCompressType() compressor.CompressType {
+	r.RLock()
+	defer r.RUnlock()
+	return r.CompressType
 }
 
 // ResetHeader reset response header
